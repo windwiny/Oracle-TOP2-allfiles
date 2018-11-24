@@ -3,7 +3,7 @@
 ************************* http://top.antognini.ch *************************
 ***************************************************************************
 
-File name...: ParsingTest3.c
+File name...: ParsingTest1.c
 Author......: Christian Antognini
 Date........: August 2008
 Description.: This file contains an implementation of test case 1.
@@ -15,9 +15,12 @@ You can send feedbacks or questions about this script to top@antognini.ch.
 Changes:
 DD.MM.YYYY Description
 ---------------------------------------------------------------------------
-
+16.08.2018 Fixed header and includes to avoid warnings
 **************************************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include <oci.h>
 
 

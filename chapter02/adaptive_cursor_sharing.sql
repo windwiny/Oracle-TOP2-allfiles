@@ -19,6 +19,8 @@ REM ---------------------------------------------------------------------------
 REM 08.23.2012 Added test for implicit datatype conversion
 REM 10.12.2012 Added child cursor invalidation for extending its selectivity
 REM 07.12.2013 Added test for missing object statistics
+REM 18.08.2016 Added test with equality predicate + test with expression
+REM 08.11.2017 Added query to show information provided by v$sql_shared_cursor
 REM ***************************************************************************
 
 SET TERMOUT ON
@@ -29,12 +31,16 @@ SET SCAN ON
 @../connect.sql
 
 VARIABLE id NUMBER
+VARIABLE n NUMBER
 
 COLUMN is_bind_sensitive FORMAT A17
 COLUMN is_bind_aware FORMAT A13
 COLUMN is_shareable FORMAT A12
 COLUMN peeked FORMAT A6
 COLUMN predicate FORMAT A9 TRUNC
+COLUMN column_name FORMAT A15
+COLUMN load_optimizer_stats FORMAT A20
+COLUMN bind_equiv_failure FORMAT A18
 
 COLUMN sql_id NEW_VALUE sql_id
 
@@ -52,18 +58,24 @@ DROP TABLE t;
 
 CREATE TABLE t 
 AS 
-SELECT rownum AS id, rpad('*',100,'*') AS pad 
+SELECT rownum AS id, 
+       CASE WHEN rownum<100 THEN rownum ELSE 666 END AS n1, 
+       CASE WHEN rownum<100 THEN rownum ELSE 666 END AS n2, 
+       rpad('*',100,'*') AS pad 
 FROM dual
 CONNECT BY level <= 1000;
 
 ALTER TABLE t ADD CONSTRAINT t_pk PRIMARY KEY (id);
+
+CREATE INDEX t_n1_i ON t (n1);
+CREATE INDEX t_n2_i ON t (n2);
 
 BEGIN
   dbms_stats.gather_table_stats(
     ownname          => user, 
     tabname          => 't', 
     estimate_percent => 100, 
-    method_opt       => 'for all columns size 1'
+    method_opt       => 'for columns size 1, id, n1, pad, n2 size 100'
   );
 END;
 /
@@ -167,6 +179,13 @@ ORDER BY child_number;
 
 PAUSE
 
+SELECT child_number, load_optimizer_stats, bind_equiv_failure
+FROM v$sql_shared_cursor
+WHERE sql_id = '&sql_id'
+ORDER BY child_number;
+
+PAUSE
+
 SELECT * FROM table(dbms_xplan.display_cursor('&sql_id', NULL, 'basic'));
 
 PAUSE
@@ -211,6 +230,13 @@ PAUSE
 
 SELECT child_number, is_bind_sensitive, is_bind_aware, is_shareable, plan_hash_value
 FROM v$sql
+WHERE sql_id = '&sql_id'
+ORDER BY child_number;
+
+PAUSE
+
+SELECT child_number, load_optimizer_stats, bind_equiv_failure
+FROM v$sql_shared_cursor
 WHERE sql_id = '&sql_id'
 ORDER BY child_number;
 
@@ -290,9 +316,118 @@ ORDER BY child_number;
 PAUSE
 
 REM
+REM Show that with an equality predicate an histogram is necessary to get
+REM several execution plans, and that even though the cursor is made bind aware
+REM
+
+REM note that only the column N2 has an histogram
+
+SELECT column_name, histogram
+FROM user_tab_col_statistics
+WHERE table_name = 'T'
+ORDER BY column_name;
+
+PAUSE
+
+REM the first series of queries is executed by referencing N1
+REM => even though the cursor is bind aware a single execution plan is used
+
+PAUSE
+
+EXECUTE :n := 42;
+
+SELECT count(pad) FROM t WHERE n1 = :n;
+
+PAUSE
+
+EXECUTE :n := 666;
+
+SELECT count(pad) FROM t WHERE n1 = :n;
+SELECT count(pad) FROM t WHERE n1 = :n;
+
+PAUSE
+
+EXECUTE :n := 42;
+
+SELECT count(pad) FROM t WHERE n1 = :n;
+
+PAUSE
+
+SELECT sql_id, child_number, is_bind_sensitive, is_bind_aware, is_shareable, executions
+FROM v$sql
+WHERE sql_text = 'SELECT count(pad) FROM t WHERE n1 = :n'
+ORDER BY child_number;
+
+PAUSE
+
+SELECT sql_id, child_number, trim(predicate) AS predicate, low, high
+FROM v$sql_cs_selectivity 
+WHERE sql_id = '&sql_id'
+ORDER BY child_number;
+
+PAUSE
+
+REM the second series of queries is executed by referencing N2
+REM => two execution plans are used
+
+PAUSE
+
+EXECUTE :n := 42;
+
+SELECT count(pad) FROM t WHERE n2 = :n;
+
+PAUSE
+
+EXECUTE :n := 666;
+
+SELECT count(pad) FROM t WHERE n2 = :n;
+SELECT count(pad) FROM t WHERE n2 = :n;
+
+PAUSE
+
+EXECUTE :n := 42;
+
+SELECT count(pad) FROM t WHERE n2 = :n;
+
+PAUSE
+
+SELECT sql_id, child_number, is_bind_sensitive, is_bind_aware, is_shareable, executions
+FROM v$sql
+WHERE sql_text = 'SELECT count(pad) FROM t WHERE n2 = :n'
+ORDER BY child_number;
+
+PAUSE
+
+SELECT sql_id, child_number, trim(predicate) AS predicate, low, high
+FROM v$sql_cs_selectivity 
+WHERE sql_id = '&sql_id'
+ORDER BY child_number;
+
+PAUSE
+
+REM
+REM Show that adaptive cursor sharing is not used when a variable is involved 
+REM in an expression. In fact, when an expression is involved, bind sensitivity
+REM is not enabled.
+REM
+
+EXECUTE :id := 10;
+
+select /*+ bind_aware */ count(pad) from t where id < :id*10;
+
+PAUSE
+
+SELECT sql_id, child_number, is_bind_sensitive, is_bind_aware, is_shareable
+FROM v$sql
+WHERE sql_text = 'select /*+ bind_aware */ count(pad) from t where id < :id*10'
+ORDER BY child_number;
+
+PAUSE
+
+REM
 REM Show that adaptive cursor sharing is not used when no object statistics  
-REM are available (note that to avoid sharing another cursor the text of the
-REM SQL statement is written with lowercase characters)
+REM are available. In fact, when no object statistics are available, bind 
+REM sensitivity is not enabled.
 REM
 
 BEGIN
@@ -307,20 +442,6 @@ END;
 EXECUTE :id := 10;
 
 select /*+ bind_aware */ count(pad) from t where id < :id;
-
-PAUSE
-
-SELECT * FROM table(dbms_xplan.display_cursor(NULL, NULL, 'basic'));
-
-PAUSE
-
-EXECUTE :id := 990;
-
-select /*+ bind_aware */ count(pad) from t where id < :id;
-
-PAUSE
-
-SELECT * FROM table(dbms_xplan.display_cursor(NULL, NULL, 'basic'));
 
 PAUSE
 

@@ -38,6 +38,7 @@ REM 07.01.2015 Added SESSION_SERIAL#
 REM 09.01.2015 The first two input parameters are more flexible and support 
 REM            an expression + Added information about period and number of ASH
 REM            samples + Made script compatible with 10.2 and 11.1
+REM 18.05.2018 Fixed sorting issue in ASH query
 REM ***************************************************************************
 
 SET TERMOUT ON LINESIZE 120 SCAN ON VERIFY OFF FEEDBACK OFF
@@ -124,30 +125,40 @@ AND session_serial# = decode(lower('&serial'), 'all', session_serial#, to_number
 
 SELECT ash.activity_pct,
        ash.db_time,
-       round(ash.cpu_time / ash.db_time * 100, 1) AS cpu_pct,
-       round(ash.user_io_time / ash.db_time * 100, 1) AS user_io_pct,
-       round(ash.wait_time / ash.db_time * 100, 1) AS wait_pct,
+       ash.cpu_pct,
+       ash.user_io_pct,
+       ash.wait_pct,
        ash.sql_id,
        nvl(aa.name, ash.sql_opcode) AS sql_opname
 FROM (
-  SELECT round(100 * ratio_to_report(sum(1)) OVER (), 1) AS activity_pct,
-         sum(1) AS db_time,
-         sum(decode(session_state, 'ON CPU', 1, 0)) AS cpu_time,
-         sum(decode(session_state, 'WAITING', decode(wait_class, 'User I/O', 1, 0), 0)) AS user_io_time,
-         sum(decode(session_state, 'WAITING', 1, 0)) - sum(decode(session_state, 'WAITING', decode(wait_class, 'User I/O', 1, 0), 0)) AS wait_time,
-         sql_id,
-         sql_opcode
-  FROM v$active_session_history
-  WHERE sample_time > to_timestamp(:t1,'YYYY-MM-DD_HH24:MI:SSXFF')
-  AND sample_time <= to_timestamp(:t2,'YYYY-MM-DD_HH24:MI:SSXFF')
-  AND sql_id IS NOT NULL
-  AND session_id = decode(lower('&sid'), 'all', session_id, to_number('&sid')) 
-  AND session_serial# = decode(lower('&serial'), 'all', session_serial#, to_number('&serial')) 
-  GROUP BY sql_id, sql_opcode
-  ORDER BY sum(1) DESC
+  SELECT ash.activity_pct,
+         ash.db_time,
+         round(ash.cpu_time / ash.db_time * 100, 1) AS cpu_pct,
+         round(ash.user_io_time / ash.db_time * 100, 1) AS user_io_pct,
+         round(ash.wait_time / ash.db_time * 100, 1) AS wait_pct,
+         ash.sql_id,
+         ash.sql_opcode
+  FROM (
+    SELECT round(100 * ratio_to_report(sum(1)) OVER (), 1) AS activity_pct,
+           sum(1) AS db_time,
+           sum(decode(session_state, 'ON CPU', 1, 0)) AS cpu_time,
+           sum(decode(session_state, 'WAITING', decode(wait_class, 'User I/O', 1, 0), 0)) AS user_io_time,
+           sum(decode(session_state, 'WAITING', 1, 0)) - sum(decode(session_state, 'WAITING', decode(wait_class, 'User I/O', 1, 0), 0)) AS wait_time,
+           sql_id,
+           sql_opcode
+    FROM v$active_session_history
+    WHERE sample_time > to_timestamp(:t1,'YYYY-MM-DD_HH24:MI:SSXFF')
+    AND sample_time <= to_timestamp(:t2,'YYYY-MM-DD_HH24:MI:SSXFF')
+    AND sql_id IS NOT NULL
+    AND session_id = decode(lower('&sid'), 'all', session_id, to_number('&sid'))
+    AND session_serial# = decode(lower('&serial'), 'all', session_serial#, to_number('&serial'))
+    GROUP BY sql_id, sql_opcode
+    ORDER BY activity_pct DESC
+  ) ash
+  WHERE rownum <= 10
 ) ash, audit_actions aa
-WHERE rownum <= 10
-AND ash.sql_opcode = aa.action(+);
+WHERE ash.sql_opcode = aa.action(+)
+ORDER BY ash.activity_pct DESC;
 
 UNDEFINE sid
 UNDEFINE serial

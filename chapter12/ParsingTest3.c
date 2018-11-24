@@ -15,9 +15,12 @@ You can send feedbacks or questions about this script to top@antognini.ch.
 Changes:
 DD.MM.YYYY Description
 ---------------------------------------------------------------------------
-
+16.08.2018 Fixed includes to avoid warnings
 **************************************************************************/
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include <oci.h>
 
 

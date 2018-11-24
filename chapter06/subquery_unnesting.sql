@@ -17,7 +17,7 @@ REM
 REM Changes:
 REM DD.MM.YYYY Description
 REM ---------------------------------------------------------------------------
-REM 
+REM 01.04.2016 Cover many more cases
 REM ***************************************************************************
 
 SET TERMOUT ON FEEDBACK OFF
@@ -42,10 +42,9 @@ CREATE TABLE t2 (
   pad VARCHAR2(100) NULL
 );
 
-
-
 ALTER SESSION SET tracefile_identifier = 'subquery_unnesting';
 
+PAUSE
 
 REM semi-join unnesting
 
@@ -53,7 +52,7 @@ ALTER SESSION SET events '10053 trace name context forever';
 EXPLAIN PLAN FOR
 SELECT *
 FROM t1
-WHERE EXISTS (SELECT 1 FROM t2 WHERE t2.id = t1.id AND t2.pad IS NOT NULL);
+WHERE EXISTS (SELECT /*+ unnest */ 1 FROM t2 WHERE t2.id = t1.id AND t2.pad IS NOT NULL);
 ALTER SESSION SET events '10053 trace name context off';
 SELECT * FROM table(dbms_xplan.display(NULL, NULL, 'basic predicate'));
 
@@ -101,49 +100,6 @@ SELECT t1.*,(SELECT /*+ no_unnest */ max(t2.id) FROM t2 WHERE t2.id = t1.id) AS 
 FROM t1;
 ALTER SESSION SET events '10053 trace name context off';
 SELECT * FROM table(dbms_xplan.display(NULL, NULL, 'basic predicate'));
-
-
-
-
-
-SET ECHO OFF
-REM ***************************************************************************
-REM ******************* Troubleshooting Oracle Performance ********************
-REM ************************* http://top.antognini.ch *************************
-REM ***************************************************************************
-REM
-REM File name...: subquery_unnesting.sql
-REM Author......: Christian Antognini
-REM Date........: August 2008
-REM Description.: This script provides several examples of subquery unnesting.
-REM Notes.......: The unnesting of the anti join in this scripts works as of 
-REM               Oracle Database 10g only.
-REM Parameters..: -
-REM
-REM You can send feedbacks or questions about this script to top@antognini.ch.
-REM
-REM Changes:
-REM DD.MM.YYYY Description
-REM ---------------------------------------------------------------------------
-REM 24.06.2010 Cover many more cases
-REM ***************************************************************************
-
-SET TERMOUT ON
-SET FEEDBACK OFF
-SET VERIFY OFF
-SET SCAN ON
-
-@../connect.sql
-
-SET ECHO ON
-
-REM
-REM Setup test environment
-REM
-
-@@create_tx.sql
-
-PAUSE
 
 REM
 REM Semi join

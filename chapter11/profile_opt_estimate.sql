@@ -21,6 +21,7 @@ REM ---------------------------------------------------------------------------
 REM 24.06.2010 Uncommented 11g query
 REM 31.07.2013 Script renamed (the old name was opt_estimate.sql) + removed
 REM            code for 10.1 + lot of changes to remove references to CH table
+REM 09.11.2017 Added queries using dbms_xplan.display_sql_profile_plan
 REM ***************************************************************************
 
 SET TERMOUT ON
@@ -148,6 +149,11 @@ PAUSE
 SELECT category, sql_text, force_matching
 FROM dba_sql_profiles
 WHERE name = 'opt_estimate';
+
+PAUSE
+
+SELECT *
+FROM table(dbms_xplan.display_sql_profile_plan('opt_estimate'));
 
 PAUSE
 

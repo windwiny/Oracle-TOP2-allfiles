@@ -19,6 +19,7 @@ REM DD.MM.YYYY Description
 REM ---------------------------------------------------------------------------
 REM 06.08.2013 Improvements to avoid user inputs + 
 REM            script renamed (the old name was clone_baseline.sql)
+REM 09.11.2017 Fixed typo in a comment
 REM ***************************************************************************
 
 SET TERMOUT ON
@@ -129,7 +130,7 @@ END;
 PAUSE
 
 REM
-REM "Inport" SQL plan baseline
+REM "Import" SQL plan baseline
 REM
 
 DECLARE

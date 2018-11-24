@@ -34,7 +34,7 @@ REM
 REM Changes:
 REM DD.MM.YYYY Description
 REM ---------------------------------------------------------------------------
-REM 
+REM 18.05.2018 Fixed sorting issue in ASH query + handle no longer existing objects
 REM ***************************************************************************
 
 SET TERMOUT ON LINESIZE 120 SCAN ON VERIFY OFF FEEDBACK OFF
@@ -108,21 +108,25 @@ AND sample_time <= to_timestamp(:t2,'YYYY-MM-DD_HH24:MI:SSXFF')
 AND plsql_object_id IS NOT NULL;
 
 SELECT ash.activity_pct,
-       p.owner || '.' || p.object_name || nullif('.' || p.procedure_name, '.') || nullif('#' || p.overload, '#') AS plsql_program
+       nvl(nullif(p.owner || '.' || p.object_name, '.'), 'UNKNOWN') || nullif('.' || p.procedure_name, '.') || nullif('#' || p.overload, '#') AS plsql_program
 FROM (
-  SELECT round(100 * ratio_to_report(sum(1)) OVER (), 1) AS activity_pct,
-         plsql_object_id,
-         plsql_subprogram_id
-  FROM v$active_session_history
-  WHERE sample_time > to_timestamp(:t1,'YYYY-MM-DD_HH24:MI:SSXFF')
-  AND sample_time <= to_timestamp(:t2,'YYYY-MM-DD_HH24:MI:SSXFF')
-  AND plsql_object_id IS NOT NULL
-  GROUP BY plsql_object_id, plsql_subprogram_id
-  ORDER BY sum(1) DESC
+  SELECT *
+  FROM (
+    SELECT round(100 * ratio_to_report(sum(1)) OVER (), 1) AS activity_pct,
+           plsql_object_id,
+           plsql_subprogram_id
+    FROM v$active_session_history
+    WHERE sample_time > to_timestamp(:t1,'YYYY-MM-DD_HH24:MI:SSXFF')
+    AND sample_time <= to_timestamp(:t2,'YYYY-MM-DD_HH24:MI:SSXFF')
+    AND plsql_object_id IS NOT NULL
+    GROUP BY plsql_object_id, plsql_subprogram_id
+    ORDER BY activity_pct DESC
+  )
+  WHERE rownum <= 10
 ) ash, dba_procedures p
-WHERE rownum <= 10
-AND ash.plsql_object_id = p.object_id
-AND ash.plsql_subprogram_id = p.subprogram_id;
+WHERE ash.plsql_object_id = p.object_id(+)
+AND ash.plsql_subprogram_id = p.subprogram_id(+)
+ORDER BY ash.activity_pct DESC;
 
 UNDEFINE 1
 UNDEFINE 2

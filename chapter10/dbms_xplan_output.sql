@@ -22,6 +22,7 @@ REM 21.07.2013 Moved example of peeked bind variables at the beginning +
 REM            show difference between "all" and "advanced"
 REM 17.02.2014 Renamed table "t" to "t1" + Added table "t2" + Added example
 REM            with rowstats
+REM 27.10.2016 Fixed typo in DROP TABLE
 REM ***************************************************************************
 
 SET TERMOUT ON
@@ -47,7 +48,7 @@ REM Setup test environment
 REM
 
 DROP TABLE t1;
-DROP TABLE t1;
+DROP TABLE t2;
 
 CREATE TABLE t1 
 AS 

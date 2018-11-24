@@ -16,7 +16,10 @@ REM               - 11.1.0.6: 1026
 REM               - 11.1.0.7: 32568
 REM               - 11.2.0.2: 65536
 REM               - 11.2.0.3: 100 (_cursor_obsolete_threshold)
+REM               - 11.2.0.4: 1024 (_cursor_obsolete_threshold)
 REM               - 12.1.0.1: 1024 (_cursor_obsolete_threshold)
+REM               - 12.1.0.2: 1024 (_cursor_obsolete_threshold)
+REM               - 12.2.0.1: 8192 (_cursor_obsolete_threshold)
 REM Parameters..: -
 REM
 REM You can send feedbacks or questions about this script to top@antognini.ch.
@@ -25,6 +28,9 @@ REM Changes:
 REM DD.MM.YYYY Description
 REM ---------------------------------------------------------------------------
 REM 20.02.2014 Added example with plan table containing runtime statistics
+REM 13.02.2015 Added note about 12.1.0.2
+REM 10.06.2016 Added note about 11.2.0.4
+REM 19.11.2016 Added note about 12.2.0.1
 REM ***************************************************************************
 
 SET TERMOUT ON

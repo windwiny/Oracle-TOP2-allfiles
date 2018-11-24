@@ -11,6 +11,9 @@ REM Description.: You can use this script to map a session ID to a trace file.
 REM Notes.......: Up to 10.1 the value of the initialization parameter
 REM               tracefile_identifier (v$process.traceid) is visible only to
 REM               the session that set it.
+REM               The multithreaded model available from 12c onward is not
+REM               considered by this script. Anyway, in 11g and later you
+REM               should use v$diag_info instead.
 REM Parameters..: -
 REM
 REM You can send feedbacks or questions about this script to top@antognini.ch.
@@ -20,6 +23,7 @@ REM DD.MM.YYYY Description
 REM ---------------------------------------------------------------------------
 REM 08.03.2009 As of 11g the function LOWER must not be applied to the 
 REM            instance name 
+REM 11.01.2016 Added comment in header about multithreaded model
 REM ***************************************************************************
 
 SET TERMOUT ON

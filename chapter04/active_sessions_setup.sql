@@ -18,6 +18,7 @@ REM Changes:
 REM DD.MM.YYYY Description
 REM ---------------------------------------------------------------------------
 REM 29.06.2014 To provide 10g compatibility replaced REGEXP_SUBSTR with SUBSTR
+REM 30.05.2018 Fixed sorting issue
 REM ***************************************************************************
 
 SET ECHO ON
@@ -99,31 +100,31 @@ BEGIN
                      decode(s.type,'BACKGROUND',substr(program,instr(program,'(')+1,4),program) AS program,
                      sum(stm.db_time) AS db_time,
                      sum(stm.activity) AS activity
-              FROM (SELECT sid,
-                           db_time,
-                           db_time/nullif(l_tot_db_time,0)*100 AS activity
-                    FROM (WITH 
-                            active_sessions AS (
-                              SELECT snap2.sid,
-                                     snap2.value-nvl(snap1.value,0) AS db_time
-                              FROM table(l_snap1) snap1 
-                                   RIGHT OUTER JOIN table(l_snap2) snap2 ON snap1.sid = snap2.sid
-                            )
-                          /* active sessions */
-                          SELECT to_char(sid) AS sid,
-                                 db_time
-                          FROM active_sessions
-                          UNION ALL
-                          /* closed sessions */
-                          SELECT 'Unknown' AS sid,
-                                 l_tot_db_time-sum(db_time) AS db_time
-                          FROM active_sessions)
-                    ORDER BY db_time DESC) stm
+              FROM (SELECT *
+                    FROM (SELECT sid,
+                                 db_time,
+                                 db_time/nullif(l_tot_db_time,0)*100 AS activity
+                          FROM (WITH 
+                                  active_sessions AS (
+                                    SELECT snap2.sid,
+                                           snap2.value-nvl(snap1.value,0) AS db_time
+                                    FROM table(l_snap1) snap1 
+                                         RIGHT OUTER JOIN table(l_snap2) snap2 ON snap1.sid = snap2.sid
+                                  )
+                                /* active sessions */
+                                SELECT to_char(sid) AS sid,
+                                       db_time
+                                FROM active_sessions
+                                UNION ALL
+                                /* closed sessions */
+                                SELECT 'Unknown' AS sid,
+                                       l_tot_db_time-sum(db_time) AS db_time
+                                FROM active_sessions)
+                          ORDER BY db_time DESC)
+                    WHERE rownum <= p_top) stm
                     LEFT OUTER JOIN v$session s ON to_char(s.sid) = stm.sid
-              WHERE rownum <= p_top
               GROUP BY rollup((stm.sid, s.type, s.program, s.username))
-              ORDER BY grouping(sid),
-                       db_time DESC)
+              ORDER BY grouping(sid), db_time DESC)
     LOOP
       PIPE ROW(t_active_session(l_tstamp, 
                                 l_logons_cur,

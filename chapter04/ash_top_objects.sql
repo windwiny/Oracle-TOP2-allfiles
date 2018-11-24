@@ -31,7 +31,7 @@ REM
 REM Changes:
 REM DD.MM.YYYY Description
 REM ---------------------------------------------------------------------------
-REM 
+REM 18.05.2018 Fixed sorting issue in ASH query + handle no longer existing objects
 REM ***************************************************************************
 
 SET TERMOUT ON LINESIZE 120 SCAN ON VERIFY OFF FEEDBACK OFF
@@ -106,20 +106,24 @@ AND sample_time <= to_timestamp(:t2,'YYYY-MM-DD_HH24:MI:SSXFF')
 AND wait_class = 'User I/O';
 
 SELECT ash.activity_pct,
-       o.owner || '.' || o.object_name AS object_name,
+       nvl(nullif(o.owner || '.' || o.object_name, '.'), 'UNKNOWN') AS object_name,
        o.object_type
 FROM (
-  SELECT round(100 * ratio_to_report(sum(1)) OVER (), 1) AS activity_pct,
-         current_obj#
-  FROM v$active_session_history
-  WHERE sample_time > to_timestamp(:t1,'YYYY-MM-DD_HH24:MI:SSXFF')
-  AND sample_time <= to_timestamp(:t2,'YYYY-MM-DD_HH24:MI:SSXFF')
-  AND wait_class = 'User I/O'
-  GROUP BY current_obj#
-  ORDER BY sum(1) DESC
+  SELECT *
+  FROM (
+    SELECT round(100 * ratio_to_report(sum(1)) OVER (), 1) AS activity_pct,
+           current_obj#
+    FROM v$active_session_history
+    WHERE sample_time > to_timestamp(:t1,'YYYY-MM-DD_HH24:MI:SSXFF')
+    AND sample_time <= to_timestamp(:t2,'YYYY-MM-DD_HH24:MI:SSXFF')
+    AND wait_class = 'User I/O'
+    GROUP BY current_obj#
+    ORDER BY activity_pct DESC
+  )
+  WHERE rownum <= 10
 ) ash, dba_objects o
-WHERE rownum <= 10
-AND ash.current_obj# = o.object_id(+);
+WHERE ash.current_obj# = o.object_id(+)
+ORDER BY ash.activity_pct DESC;
 
 UNDEFINE 1
 UNDEFINE 2

@@ -23,6 +23,10 @@ REM DD.MM.YYYY Description
 REM ---------------------------------------------------------------------------
 REM 30.11.2012 Replaced dbms_monitor with dbms_session.
 REM 20.08.2014 Fixed typo in dbms_session call. Updated notes.
+REM 20.03.2018 Because of the security fix 21622969 (refer to the MOS note 
+REM            "DBMS_SESSION.IS_ROLE_ENABLED ALWAYS RETURN FALSE (2305012.1)"),
+REM            removed the role to check whether SQL trace has to be enabled.
+REM            Instead, a trigger checking the user name is used.
 REM ***************************************************************************
 
 SET TERMOUT ON
@@ -35,21 +39,19 @@ SET SCAN ON
 SET ECHO ON
 
 REM
-REM The trigger will enable SQL trace for each user having the
-REM following role enabled while connecting the database.
+REM The trigger will enable SQL trace for the user owning it. As a result,
+REM the variable "user" has to be set to the name of the user for which SQL
+REM trace has to be enabled. Be careful that the match is case sensitive.
 REM
-
-CREATE ROLE sql_trace;
 
 PAUSE
 
-CREATE OR REPLACE TRIGGER enable_sql_trace AFTER LOGON ON DATABASE
+CREATE OR REPLACE TRIGGER enable_sql_trace 
+AFTER LOGON ON DATABASE
+WHEN (user = '&user')
 BEGIN
-  IF (dbms_session.is_role_enabled('SQL_TRACE'))
-  THEN
-    EXECUTE IMMEDIATE 'ALTER SESSION SET timed_statistics = TRUE';
-    EXECUTE IMMEDIATE 'ALTER SESSION SET max_dump_file_size = unlimited';
-    dbms_session.session_trace_enable;
-  END IF;
+  EXECUTE IMMEDIATE 'ALTER SESSION SET timed_statistics = TRUE';
+  EXECUTE IMMEDIATE 'ALTER SESSION SET max_dump_file_size = unlimited';
+  dbms_session.session_trace_enable;
 END;
 /

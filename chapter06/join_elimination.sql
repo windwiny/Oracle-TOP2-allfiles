@@ -7,7 +7,7 @@ REM
 REM File name...: join_elimination.sql
 REM Author......: Christian Antognini
 REM Date........: August 2008
-REM Description.: This script provides an example of join elimination.
+REM Description.: This script provides examples of join elimination.
 REM Notes.......: At least Oracle Database 10g Release 2 is required to run
 REM               this script.
 REM Parameters..: -
@@ -22,6 +22,7 @@ REM 14.09.2011 Added example with new join syntax
 REM 22.08.2013 Added examples with NOVALIDATE, RELY and DEFERRABLE constraint
 REM 22.09.2015 Added examples with query_rewrite_integrity + added comments 
 REM            about expected usage of join elimination
+REM 18.03.2017 Added expected usage of join elimination in 12.2.0.1
 REM ***************************************************************************
 
 SET TERMOUT ON
@@ -94,7 +95,7 @@ PAUSE
 
 REM FK disabled or enabled novalidate + marked as reliable + query_rewrite_integrity=enforced
 REM 10.2.0.5-12.1.0.1 --> join elimination takes place
-REM 12.1.0.2 --> no join elimination
+REM 12.1.0.2-12.2.0.1 --> no join elimination
 
 ALTER SESSION SET query_rewrite_integrity = enforced;
 
@@ -120,7 +121,7 @@ PAUSE
 
 REM FK disabled or enabled novalidate + marked as reliable + query_rewrite_integrity=trusted/stale_tolerated
 REM 10.2.0.5-11.1.0.7 --> no join elimination
-REM 11.2.0.1-12.1.0.2 --> join elimination takes place
+REM 11.2.0.1-12.2.0.1 --> join elimination takes place
 
 ALTER TABLE t2 DISABLE CONSTRAINT t2_t1_fk;
 ALTER TABLE t2 MODIFY CONSTRAINT t2_t1_fk RELY;
@@ -167,6 +168,7 @@ PAUSE
 REM FK enabled deferrable
 REM 10.2.0.5-11.2.0.4 --> join elimination takes place
 REM 12.1.0.x --> no join elimination
+REM 12.2.0.1 --> join elimination takes place
 
 ALTER TABLE t2 DROP CONSTRAINT t2_t1_fk;
 ALTER TABLE t2 ADD CONSTRAINT t2_t1_fk FOREIGN KEY (t1_id) REFERENCES t1 DEFERRABLE;
