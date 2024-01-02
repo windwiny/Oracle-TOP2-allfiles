@@ -40,6 +40,9 @@ REM            an expression + Added information about period and number of ASH
 REM            samples + Made script compatible with 10.2 and 11.1
 REM 18.05.2018 Fixed sorting issue in ASH query
 REM ***************************************************************************
+select '1 period begin, 2 period end   Ex: 23:15:35  2014-10-13_23:15  sysdate sysdate-(1/24/60)*10 (10 minutes ago)' as Parameters from dual
+union
+select '3 either "all" or the sid of the session to focus on ,  4 either "all" or the serial# of the session to focus on' from dual;
 
 SET TERMOUT ON LINESIZE 120 SCAN ON VERIFY OFF FEEDBACK OFF
 

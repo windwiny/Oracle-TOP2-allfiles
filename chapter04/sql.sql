@@ -18,6 +18,7 @@ REM DD.MM.YYYY Description
 REM ---------------------------------------------------------------------------
 REM 30.06.2014 Added header to the output
 REM ***************************************************************************
+select '1: SQL id of the parent cursor' as Parameters from dual; 
 
 SET TERMOUT OFF SERVEROUT ON LONG 1000000 LONGCHUNKSIZE 1000000 LINESIZE 90 VERIFY OFF FEEDBACK OFF HEADING OFF
 

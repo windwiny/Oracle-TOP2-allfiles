@@ -36,6 +36,7 @@ REM DD.MM.YYYY Description
 REM ---------------------------------------------------------------------------
 REM 18.05.2018 Fixed sorting issue in ASH query + handle no longer existing objects
 REM ***************************************************************************
+select '1 period begin, 2 period end   Ex: 23:15:35  2014-10-13_23:15  sysdate sysdate-(1/24/60)*10 (10 minutes ago)' as Parameters from dual; 
 
 SET TERMOUT ON LINESIZE 120 SCAN ON VERIFY OFF FEEDBACK OFF
 

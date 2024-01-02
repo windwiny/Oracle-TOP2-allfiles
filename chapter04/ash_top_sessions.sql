@@ -35,6 +35,7 @@ REM 07.01.2015 Added SESSION_SERIAL#
 REM 09.01.2015 Input parameters are more flexible and support an expression +
 REM            Added information about period and number of ASH samples
 REM ***************************************************************************
+select '1 period begin, 2 period end   Ex: 23:15:35  2014-10-13_23:15  sysdate sysdate-(1/24/60)*10 (10 minutes ago)' as Parameters from dual; 
 
 SET TERMOUT ON LINESIZE 120 SCAN ON VERIFY OFF FEEDBACK OFF
 

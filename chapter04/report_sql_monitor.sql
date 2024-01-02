@@ -20,6 +20,7 @@ REM DD.MM.YYYY Description
 REM ---------------------------------------------------------------------------
 REM
 REM ***************************************************************************
+select ' 1: SQL id of the statement to be reported' as Parameters from dual; 
 
 SET TRIMSPOOL ON
 SET TRIM ON

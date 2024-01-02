@@ -22,8 +22,10 @@ REM ---------------------------------------------------------------------------
 REM 29.06.2014 Added header to the output
 REM 08.01.2015 Fixed AAS computation for last interval
 REM ***************************************************************************
+select '1 either "all" or the sid of the session to focus on,  2 either "all" or the SQL id of the statement to focus on' as Parameters from dual; 
 
 SET TERMOUT OFF LINESIZE 110 SCAN ON VERIFY OFF FEEDBACK OFF
+set head on
 
 UNDEFINE sid
 UNDEFINE sql_id
