@@ -23,6 +23,7 @@ REM DD.MM.YYYY Description
 REM ---------------------------------------------------------------------------
 REM 
 REM ***************************************************************************
+select '1: interval between two samples   2: number of samples  3: number of sessions to show' as Parameters from dual; 
 
 SET TERMOUT OFF FEEDBACK OFF SCAN ON VERIFY OFF ARRAYSIZE 1 PAGESIZE 10000 LINESIZE 90
 

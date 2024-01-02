@@ -21,6 +21,7 @@ REM DD.MM.YYYY Description
 REM ---------------------------------------------------------------------------
 REM 
 REM ***************************************************************************
+select '1: length of the monitoring period in minutes' as Parameters from dual; 
 
 SET ECHO OFF TERMOUT OFF FEEDBACK OFF SCAN ON VERIFY OFF ARRAYSIZE 1 PAGESIZE 25 LINESIZE 70 HEADING ON
 

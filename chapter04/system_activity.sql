@@ -22,6 +22,7 @@ REM ---------------------------------------------------------------------------
 REM 
 REM ***************************************************************************
 
+select '1: interval between two samples   2: number of samples' as Parameters from dual; 
 SET TERMOUT OFF FEEDBACK OFF SCAN ON VERIFY OFF ARRAYSIZE 1 PAGESIZE 25 LINESIZE 110
 
 CLEAR BREAKS
