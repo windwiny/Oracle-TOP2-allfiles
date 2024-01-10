@@ -1,0 +1,586 @@
+
+Contents at a Glance                                                            3
+About IOUG Press                                                                5
+Contents                                                                        698
+Foreword by Jonathan Lewis                                                      710
+Foreword by Cary Millsap                                                        711
+Foreword from the First Edition                                                 712
+About the Author                                                                713
+About the Technical Reviewers                                                   714
+Acknowledgments                                                                 716
+Acknowledgments from the First Edition                                          717
+Introduction                                                                    6
+Part I: Foundations                                                             
+	Chapter 1: Performance Problems                                                 
+		Do You Need to Plan Performance?                                                
+			Requirements Analysis                                                           
+			Analysis and Design                                                             
+			Coding and Unit Testing                                                         
+			Integration and Acceptance Testing                                              
+		Designing for Performance                                                       
+			Lack of Logical Database Design                                                 
+			Implementing Generic Tables                                                     
+			Not Using Constraints to Enforce Data Integrity                                 
+			Lack of Physical Database Design                                                
+			Not Choosing the Right Data Type                                                
+			Not Using Bind Variables Correctly                                              
+			Not Using Advanced Database Features                                            
+			Not Using PL/SQL for Data-Centric Processing                                    
+			Performing Unnecessary Commits                                                  
+			Steadily Opening and Closing Database Connections                               
+		Do You Have Performance Problems?                                               
+			System Monitoring                                                               
+			Response-Time Monitoring                                                        
+			Compulsive Tuning Disorder                                                      
+		How Do You Approach Performance Problems?                                       
+			Business Perspective vs. System Perspective                                     
+			Cataloging the Problems                                                         
+			Working the Problems                                                            
+		On to Chapter 2                                                                 
+	Chapter 2: Key Concepts                                                         
+		Selectivity and Cardinality                                                     
+		What Is a Cursor?                                                               
+		Life Cycle of a Cursor                                                          
+		How Parsing Works                                                               
+			Shareable Cursors                                                               
+			Bind Variables                                                                  
+				Advantage                                                                       
+				Disadvantage                                                                    
+				Best Practices                                                                  
+		Reading and Writing Blocks                                                      
+		Instrumentation                                                                 
+			Application Code                                                                
+			Database Calls                                                                  
+				PL/SQL                                                                          
+				OCI                                                                             
+				JDBC                                                                            
+					The Legacy Way                                                                  
+					The Contemporary Way                                                            
+				ODP.NET                                                                         
+				PHP                                                                             
+		On to Part 2                                                                    
+Part II : Identification                                                        
+	Chapter 3: Analysis of Reproducible Problems                                    
+		Tracing Database Calls                                                          
+			SQL Trace                                                                       
+				Enabling SQL Trace with ALTER SESSION                                           
+				Enabling SQL Trace with DBMS_MONITOR                                            
+					Session Level                                                                   
+					Client Level                                                                    
+					Component Level                                                                 
+					Database Level                                                                  
+				Enabling SQL Trace with DBMS_SESSION                                            
+				Triggering SQL Trace                                                            
+				Timing Information in Trace Files                                               
+				Limiting the Size of Trace Files                                                
+				Finding Trace Files                                                             
+			Structure of the Trace Files                                                    
+			Using TRCSESS                                                                   
+			Profilers                                                                       
+			Using TKPROF                                                                    
+				TKPROF Arguments                                                                
+				Interpreting TKPROF Output                                                      
+			Using TVD$XTAT                                                                  
+				Why Is TKPROF Not Enough?                                                       
+				Installation                                                                    
+				TVD$XTAT Arguments                                                              
+				Interpreting TVD$XTAT Output                                                    
+		Profiling PL/SQL Code                                                           
+			Using DBMS_HPROF                                                                
+				Installing the Output Tables                                                    
+				Gathering the Profiling Data                                                    
+				Manually Reporting the Profiling Data                                           
+				Using PLSHPROF                                                                  
+				Using a GUI                                                                     
+			Using DBMS_PROFILER                                                             
+				Installing the Output Tables                                                    
+				Gathering the Profiling Data                                                    
+				Manually Reporting the Profiling Data                                           
+				Using a GUI                                                                     
+			Triggering the Profilers                                                        
+		On to Chapter 4                                                                 
+	Chapter 4: Real-Time Analysis of Irreproducible Problems                        
+		Analysis Roadmap                                                                
+		Dynamic Performance Views                                                       
+			OS Statistics                                                                   
+			Time Model Statistics                                                           
+			Wait Classes and Wait Events                                                    
+			System and Session Statistics                                                   
+			Metrics                                                                         
+			Current Sessions Status                                                         
+			Active Session History                                                          
+			SQL Statement Statistics                                                        
+			Real-time Monitoring                                                            
+		Analysis With Diagnostics and Tuning Pack                                       
+			Database Server Load                                                            
+			System Level Analysis                                                           
+			Session Level Analysis                                                          
+			SQL Statement Information                                                       
+		Analysis Without Diagnostics Pack                                               
+			Database Server Load                                                            
+			System Level Analysis                                                           
+			Session Level Analysis                                                          
+			SQL Statement Information                                                       
+		On to Chapter 5                                                                 
+	Chapter 5: Postmortem Analysis of Irreproducible Problems                       
+		Repositories                                                                    
+		Automatic Workload Repository                                                   
+			Performing Configuration                                                        
+			Taking Snapshots                                                                
+			Managing Baselines                                                              
+				Managing Fixed Baselines                                                        
+				Managing the Moving Window Baseline                                             
+		Statspack                                                                       
+			Performing Installation                                                         
+			Configuring the Repository                                                      
+			Taking and Purging Snapshots                                                    
+			Managing Baselines                                                              
+		Analysis With Diagnostics Pack                                                  
+		Analysis Without Diagnostics Pack                                               
+		On to Part 3                                                                    
+Part III: Query Optimizer                                                       
+	Chapter 6: Introducing the Query Optimizer                                      
+		Fundamentals                                                                    
+		Architecture                                                                    
+		Query Transformations                                                           
+			Count Transformation                                                            
+			Common Sub-Expression Elimination                                               
+			Or Expansion                                                                    
+			View Merging                                                                    
+				Simple View Merging                                                             
+				Complex View Merging                                                            
+			Select List Pruning                                                             
+			Predicate Push Down                                                             
+				Filter Push Down                                                                
+				Join Predicate Push Down                                                        
+			Predicate Move Around                                                           
+			Distinct Placement                                                              
+			Distinct Elimination                                                            
+			Group-by Placement                                                              
+			Order-By Elimination                                                            
+			Subquery Unnesting                                                              
+			Subquery Coalescing                                                             
+			Subquery Removal Using Window Functions                                         
+			Join Elimination                                                                
+			Join Factorization                                                              
+			Outer Join to Inner Join                                                        
+			Full Outer Join                                                                 
+			Table Expansion                                                                 
+			Set to Join Conversion                                                          
+			Star Transformation                                                             
+			Query Rewrite with Materialized Views                                           
+		On to Chapter 7                                                                 
+	Chapter 7: System Statistics                                                    
+		The dbms_stats Package                                                          
+		What System Statistics Are Available?                                           
+		Gathering System Statistics                                                     
+			Noworkload Statistics                                                           
+			Workload Statistics                                                             
+			Choosing Between Noworkload Statistics and Workload Statistics                  
+		Restoring System Statistics                                                     
+		Working with a Backup Table                                                     
+		Logging of Management Operations                                                
+		Impact on the Query Optimizer                                                   
+		On to Chapter 8                                                                 
+	Chapter 8: Object Statistics                                                    
+		The dbms_stats Package                                                          
+		What Object Statistics Are Available?                                           
+			Table Statistics                                                                
+			Column Statistics                                                               
+			Histograms                                                                      
+				Frequency Histograms                                                            
+				Height-Balanced Histograms                                                      
+				Top Frequency Histograms                                                        
+				Hybrid Histograms                                                               
+				No Histogram                                                                    
+			Extended Statistics                                                             
+			Index Statistics                                                                
+			Statistics for Partitioned Objects                                              
+		Gathering Object Statistics                                                     
+			Target Objects                                                                  
+			Gathering Options                                                               
+			Backup Table                                                                    
+		Configuring the dbms_stats Package                                              
+			The Legacy Way                                                                  
+			The Contemporary Way                                                            
+		Working with Global Temporary Tables                                            
+		Working with Pending Object Statistics                                          
+		Working with Partitioned Objects                                                
+			Challenges                                                                      
+			Incremental Statistics                                                          
+			Copying Statistics                                                              
+		Scheduling Object Statistics Gathering                                          
+			The 10g Way                                                                     
+			The 11g and 12c Way                                                             
+		Restoring Object Statistics                                                     
+		Locking Object Statistics                                                       
+		Comparing Object Statistics                                                     
+		Deleting Object Statistics                                                      
+		Exporting, Importing, Getting, and Setting Object Statistics                    
+		Logging of Management Operations                                                
+		Strategies for Keeping Object Statistics Up-to-Date                             
+		On to Chapter 9                                                                 
+	Chapter 9: Configuring the Query Optimizer                                      
+		To Configure or Not to Configure...                                             
+		Configuration Road Map                                                          
+		Set the Right Parameter!                                                        
+			Query Optimizer Parameters                                                      
+				optimizer_mode                                                                  
+				optimizer_features_enable                                                       
+				db_file_multiblock_read_count                                                   
+				optimizer_dynamic_sampling                                                      
+				optimizer_index_cost_adj                                                        
+				optimizer_index_caching                                                         
+				optimizer_secure_view_merging                                                   
+			PGA Management                                                                  
+				workarea_size_policy                                                            
+				pga_aggregate_target                                                            
+				pga_aggregate_limit                                                             
+				sort_area_size                                                                  
+				sort_area_retained_size                                                         
+				hash_area_size                                                                  
+				bitmap_merge_area_size                                                          
+		On to Chapter 10                                                                
+	Chapter 10: Execution Plans                                                     
+		Obtaining Execution Plans                                                       
+			The EXPLAIN PLAN Statement                                                      
+				The Plan Table                                                                  
+				Querying the Plan Table                                                         
+				Bind Variables Trap                                                             
+			Dynamic Performance Views                                                       
+				Identifying Child Cursors                                                       
+				Querying Dynamic Performance Views                                              
+			Automatic Workload Repository and Statspack                                     
+			Tracing Facilities                                                              
+				Event 10053                                                                     
+				Event 10132                                                                     
+		The dbms_xplan Package                                                          
+			Output                                                                          
+			The display Function                                                            
+			The display_cursor Function                                                     
+			The display_awr Function                                                        
+		Interpreting Execution Plans                                                    
+			Parent-Child Relationship                                                       
+			Types of Operations                                                             
+			Stand-Alone Operations                                                          
+				Optimization of the COUNT STOPKEY Operation                                     
+				Optimization of the FILTER Operation                                            
+			Iterative Operations                                                            
+			Unrelated-Combine Operations                                                    
+			Related-Combine Operations                                                      
+				The NESTED LOOPS Operation                                                      
+				The FILTER Operation                                                            
+				The UPDATE Operation                                                            
+				The CONNECT BY WITH FILTERING Operation                                         
+				The UNION ALL (RECURSIVE WITH) Operation                                        
+			Divide and Conquer                                                              
+			Special Cases                                                                   
+				Subquery in the SELECT Clause                                                   
+				Subquery in the WHERE Clause 1                                                  
+				Subquery in the WHERE Clause 2                                                  
+			Adaptive Execution Plans                                                        
+		Recognizing Inefficient Execution Plans                                         
+			Wrong Estimations                                                               
+			Restriction Not Recognized                                                      
+		On to Part 4                                                                    
+Part IV: Optimization                                                           
+	Chapter 11: SQL Optimization Techniques                                         
+		Altering the Access Structures                                                  
+			How It Works                                                                    
+			When to Use It                                                                  
+			Pitfalls and Fallacies                                                          
+		Altering the SQL Statement                                                      
+			How It Works                                                                    
+			When to Use It                                                                  
+			Pitfalls and Fallacies                                                          
+		Hints                                                                           
+			How It Works                                                                    
+				What Are Hints ?                                                                
+				Specifying Hints                                                                
+				Categories of Hints                                                             
+				Validity of Hints                                                               
+			When to Use It                                                                  
+			Pitfalls and Fallacies                                                          
+		Altering the Execution Environment                                              
+			How It Works                                                                    
+				Session Level                                                                   
+				SQL Statement Level                                                             
+				Dynamic Performance Views                                                       
+			When to Use It                                                                  
+			Pitfalls and Fallacies                                                          
+		Stored Outlines                                                                 
+			How It Works                                                                    
+				What Are Stored Outlines ?                                                      
+				Creating Stored Outlines                                                        
+				Altering Stored Outlines                                                        
+				Activating Stored Outlines                                                      
+				Moving Stored Outlines                                                          
+				Editing Stored Outlines                                                         
+				Dropping Stored Outlines                                                        
+				Privileges                                                                      
+			When to Use It                                                                  
+			Pitfalls and Fallacies                                                          
+		SQL Profiles                                                                    
+			How It Works                                                                    
+				What Are SQL Profiles?                                                          
+				SQL Tuning Advisor                                                              
+				Accepting SQL Profiles                                                          
+				Altering SQL Profiles                                                           
+				Text Normalization                                                              
+				Activating SQL Profiles                                                         
+				Moving SQL Profiles                                                             
+				Dropping SQL Profiles                                                           
+				Privileges                                                                      
+				Undocumented Features                                                           
+			When to Use It                                                                  
+			Pitfalls and Fallacies                                                          
+		SQL Plan Management                                                             
+			How It Works                                                                    
+				What Are SQL Plan Baselines ?                                                   
+				Capturing SQL Plan Baselines                                                    
+					Automatic Capture                                                               
+					Load from Library Cache                                                         
+					Load from SQL Tuning Set                                                        
+				Displaying SQL Plan Baselines                                                   
+				Evolving SQL Plan Baselines                                                     
+				Altering SQL Plan Baselines                                                     
+				Activating SQL Plan Baselines                                                   
+				Moving SQL Plan Baselines                                                       
+				Dropping SQL Plan Baselines                                                     
+				Privileges                                                                      
+			When to Use It                                                                  
+			Pitfalls and Fallacies                                                          
+		On to Chapter 12                                                                
+	Chapter 12: Parsing                                                             
+		Identifying Parsing Problems                                                    
+			Quick Parses                                                                    
+				Using TKPROF                                                                    
+				Using TVD$XTAT                                                                  
+				Using Active Session History                                                    
+				Summarizing the Problem                                                         
+			Long Parses                                                                     
+				Using TKPROF                                                                    
+				Using TVD$XTAT                                                                  
+				Summarizing the Problem                                                         
+		Solving Parsing Problems                                                        
+			Quick Parses                                                                    
+				Using Prepared Statements                                                       
+				Reusing Prepared Statements                                                     
+				Client-Side Statement Caching                                                   
+				Summing Up                                                                      
+			Long Parses                                                                     
+		Working Around Parsing Problems                                                 
+			Cursor Sharing                                                                  
+			Server-Side Statement Caching                                                   
+		Using Application Programming Interfaces                                        
+			PL/SQL                                                                          
+				Static SQL                                                                      
+				Native Dynamic SQL: EXECUTE IMMEDIATE                                           
+				Native Dynamic SQL: OPEN/FETCH/CLOSE                                            
+				Dynamic SQL: dbms_sql Package                                                   
+			OCI                                                                             
+			JDBC                                                                            
+			ODP.NET                                                                         
+			PHP                                                                             
+		On to Chapter 13                                                                
+	Chapter 13: Optimizing Data Access                                              
+		Identifying Suboptimal Access Paths                                             
+			Identification                                                                  
+			Pitfalls                                                                        
+				Read Consistency                                                                
+				Row Prefetching                                                                 
+			Causes                                                                          
+			Solutions                                                                       
+				Retrieving a Single Row                                                         
+				Retrieving Thousands of Rows                                                    
+		SQL Statements with Weak Selectivity                                            
+			Full Table Scans                                                                
+			Full Partition Scans                                                            
+			Range Partitioning                                                              
+				PARTITION RANGE SINGLE                                                          
+				PARTITION RANGE ITERATOR                                                        
+				PARTITION RANGE INLIST                                                          
+				PARTITION RANGE ALL                                                             
+				PARTITION RANGE EMPTY                                                           
+				PARTITION RANGE OR                                                              
+				PARTITION RANGE SUBQUERY                                                        
+				PARTITION RANGE JOIN-FILTER                                                     
+				PARTITION RANGE MULTI-COLUMN                                                    
+				PARTITION RANGE AND                                                             
+			Hash and List Partitioning                                                      
+			Composite Partitioning                                                          
+			Design Considerations                                                           
+			Full Index Scans                                                                
+		SQL Statements with Strong Selectivity                                          
+			Rowid Access                                                                    
+			Index Access                                                                    
+				Clustering Factor                                                               
+				B-tree Indexes vs. Bitmap Indexes                                               
+				Equality Conditions and B-tree Indexes                                          
+				Equality Conditions and Bitmap Indexes                                          
+				IS NULL Conditions and B-tree Indexes                                           
+				IS NULL Conditions and Bitmap Indexes                                           
+				Range Conditions and B-tree Indexes                                             
+				Range Conditions and Bitmap Indexes                                             
+				IN Conditions                                                                   
+				LIKE Conditions                                                                 
+				Inequality and IS NOT NULL Conditions                                           
+				Min/Max Functions                                                               
+				Function-based Indexes                                                          
+				Linguistic Indexes                                                              
+				Composite Indexes                                                               
+					B-tree Indexes                                                                  
+					Bitmap Indexes                                                                  
+				Bitmap Plans for B-tree Indexes                                                 
+				Index-only Scans                                                                
+				Index-organized Tables                                                          
+				Global, Local, or Nonpartitioned Indexes?                                       
+				Invisible Indexes                                                               
+				Partial Indexes                                                                 
+			Single-table Hash Cluster Access                                                
+		On to Chapter 14                                                                
+	Chapter 14: Optimizing Joins                                                    
+		Definitions                                                                     
+			Join Trees                                                                      
+				Left-Deep Trees                                                                 
+				Right-Deep Trees                                                                
+				Zig-zag Trees                                                                   
+				Bushy Trees                                                                     
+			Types of Joins                                                                  
+				Cross Joins                                                                     
+				Theta Joins                                                                     
+				Equi-joins                                                                      
+				Self-joins                                                                      
+				Outer Joins                                                                     
+				Semi-joins                                                                      
+				Anti-joins                                                                      
+				Lateral Inline Views                                                            
+			Restrictions vs. Join Conditions                                                
+		Nested Loops Joins                                                              
+			Concept                                                                         
+			Two-Table Join                                                                  
+			Four-Table Join                                                                 
+			Buffer Cache Prefetches                                                         
+		Merge Joins                                                                     
+			Concept                                                                         
+			Two-Table Join                                                                  
+			Four-Table Join                                                                 
+			Work Areas                                                                      
+				In-Memory Sorts                                                                 
+				On-disk Sorts                                                                   
+		Hash Joins                                                                      
+			Concept                                                                         
+			Two-table Joins                                                                 
+			Four-Table Joins                                                                
+			Work Areas                                                                      
+			Index Joins                                                                     
+		Outer Joins                                                                     
+		Choosing the Join Method                                                        
+			First-Rows Optimization                                                         
+			All-Rows Optimization                                                           
+			Supported Join Methods                                                          
+			Parallel Joins                                                                  
+		Partition-wise Joins                                                            
+			Full Partition-wise Joins                                                       
+			Partial Partition-wise Joins                                                    
+		Star Transformation                                                             
+		On to Chapter 15                                                                
+	Chapter 15: Beyond Data Access and Join Optimization                            
+		Materialized View                                                               
+			How It Works                                                                    
+				Concepts                                                                        
+				Parameters                                                                      
+				Query Rewrite                                                                   
+				Refreshes                                                                       
+					Fast Refreshes with Materialized View Logs                                      
+					Fast Refreshes with Partition Change Tracking                                   
+			When to Use It                                                                  
+			Pitfalls and Fallacies                                                          
+		Result Caching                                                                  
+			How It Works                                                                    
+				Server Result Cache                                                             
+				PL/SQL Function Result Cache                                                    
+				Client Result Cache                                                             
+			When to Use It                                                                  
+			Pitfalls and Fallacies                                                          
+		Parallel Processing                                                             
+			How It Works                                                                    
+				Basics                                                                          
+				Basic Configuration                                                             
+					Slave Processes Pool                                                            
+					Memory Utilization                                                              
+				Degree of Parallelism                                                           
+					Default Degree of Parallelism                                                   
+					Manual Degree of Parallelism                                                    
+					Automatic Degree of Parallelism                                                 
+				Limiting the Degree of Parallelism                                              
+					Adaptive Parallelism                                                            
+					Disk I/O Cap                                                                    
+					Database Resource Manager                                                       
+					User Profile                                                                    
+				Downgrades                                                                      
+				Statement Queuing                                                               
+				Parallel Queries                                                                
+				Parallel DML Statements                                                         
+				Parallel DDL Statements                                                         
+					CTAS Statements                                                                 
+					Creation and Rebuild of Indexes                                                 
+					Creation and Validation of Constraints                                          
+			When to Use It                                                                  
+			Pitfalls and Fallacies                                                          
+		Direct-Path Insert                                                              
+			How It Works                                                                    
+			When to Use It                                                                  
+			Pitfalls and Fallacies                                                          
+		Row Prefetching                                                                 
+			How It Works                                                                    
+				PL/SQL                                                                          
+				OCI                                                                             
+				JDBC                                                                            
+				ODP.NET                                                                         
+				PHP                                                                             
+			When to Use It                                                                  
+			Pitfalls and Fallacies                                                          
+		Array Interface                                                                 
+			How It Works                                                                    
+				PL/SQL                                                                          
+				OCI                                                                             
+				JDBC                                                                            
+				ODP.NET                                                                         
+			When to Use It                                                                  
+			Pitfalls and Fallacies                                                          
+		On to Chapter 16                                                                
+	Chapter 16: Optimizing the Physical Design                                      
+		Optimal Column Order                                                            
+		Optimal Datatype                                                                
+			Pitfalls in Datatype Selection                                                  
+			Best Practices in Datatype Selection                                            
+				Numbers                                                                         
+				Character Strings                                                               
+				Bit Strings                                                                     
+				Datetimes                                                                       
+		Row Migration and Row Chaining                                                  
+			Migration vs. Chaining                                                          
+			Problem Description                                                             
+			Problem Identification                                                          
+			Solutions                                                                       
+		Block Contention                                                                
+			Problem Description                                                             
+			Problem Identification                                                          
+				Using SQL Trace                                                                 
+				Using Snapper                                                                   
+			Solutions                                                                       
+				Contention for Data Blocks                                                      
+				Contention for Segment Header Blocks                                            
+				Contention for Undo Header and Undo Blocks                                      
+				Contention for Extent Map Blocks                                                
+				Contention for Freelist Blocks                                                  
+		Data Compression                                                                
+			Concept                                                                         
+			Requirements                                                                    
+			Methods                                                                         
+Part V: Appendix                                                                
+	Bibliography                                                                    
+Index                                                                           
+General                                                                         718
+

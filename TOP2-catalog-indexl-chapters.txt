@@ -1,0 +1,20 @@
+Troubleshooting Oracle Performance, 2nd Edition
+
+Chapter 1: Performance Problems
+Chapter 2: Key Concepts
+Chapter 3: Analysis of Reproducible Problems
+Chapter 4: Real-Time Analysis of Irreproducible Problems
+Chapter 5: Postmortem Analysis of Irreproducible Problems
+Chapter 6: Introducing the Query Optimizer
+Chapter 7: System Statistics
+Chapter 8: Object Statistics
+Chapter 9: Configuring the Query Optimizer
+Chapter 10: Execution Plans
+Chapter 11: SQL Optimization Techniques
+Chapter 12: Parsing
+Chapter 13: Optimizing Data Access
+Chapter 14: Optimizing Joins
+Chapter 15: Beyond Data Access and Join Optimization
+Chapter 16: Optimizing the Physical Design
+
+

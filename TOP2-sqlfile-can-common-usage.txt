@@ -1,0 +1,49 @@
+chapter02\
+chapter03\
+chapter04\
+ * active_sessions.sql 
+ * active_sessions_setup.sql 
+ * active_sessions_teardown.sql 
+ * ash_activity.sql 
+ * ash_top_actions.sql 
+ * ash_top_clients.sql 
+ * ash_top_files.sql 
+ * ash_top_modules.sql 
+ * ash_top_objects.sql 
+ * ash_top_plsql.sql 
+ * ash_top_services.sql 
+ * ash_top_sessions.sql 
+ * ash_top_sqls.sql 
+ * host_load.sql 
+ * host_load_hist.sql 
+ * host_load_setup.sql 
+ * host_load_teardown.sql 
+ * report_sql_detail.sql 
+ * report_sql_monitor.sql 
+ * sql.sql 
+ * sqlarea.sql 
+ * sqlstats.sql 
+ * system_activity.sql 
+ * system_activity_setup.sql 
+ * system_activity_teardown.sql 
+ * time_model.sql 
+ * time_model_setup.sql 
+ * time_model_teardown.sql 
+chapter05\
+chapter06\
+chapter07\
+ * system_stats_get.sql 
+ * system_stats_history_job.sql 
+chapter08\
+ * statistics_history_alter_index.sql 
+chapter09\
+chapter10\
+ * display_statspack.sql 
+chapter11\
+    # conn exec_env_trigger.sql
+ * tune_last_statement.sql 
+chapter12\
+chapter13\
+chapter14\
+chapter15\
+chapter16\
